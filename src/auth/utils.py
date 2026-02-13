@@ -4,11 +4,11 @@ from datetime import datetime
 import jwt
 import uuid
 import logging
-from src.config import Config
+from src.config import config
 from datetime import timedelta, timezone
 
-jwt_secret_key = Config.JWT_SECRET
-jwt_algorithm = Config.JWT_ALGORITHM
+jwt_secret_key = config.JWT_SECRET
+jwt_algorithm = config.JWT_ALGORITHM
 ACCESS_TOKEN_EXPIRY = 3600
 
 now = datetime.now(timezone.utc)

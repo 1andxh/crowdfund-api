@@ -1,7 +1,6 @@
 from fastapi import FastAPI
 from contextlib import asynccontextmanager
 from src.db.main import init_db
-from src.campaingns.routes import campaign_router
 from src.auth.routes import auth_router
 
 version = "v1"
@@ -24,7 +23,4 @@ app = FastAPI(
 )
 
 
-app.include_router(
-    campaign_router, prefix=f"/api/{version}/campaigns", tags=["campaigns"]
-)
 app.include_router(auth_router, prefix=f"/api/{version}/auth", tags=["authentication"])

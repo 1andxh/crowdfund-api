@@ -1,42 +1,26 @@
-from sqlmodel import SQLModel, Field, Column
-import sqlalchemy.dialects.postgresql as pg
-from sqlalchemy import String
+from sqlalchemy import Column, String, Boolean, DateTime
+from sqlalchemy.orm import mapped_column, Mapped
+from sqlalchemy.dialects.postgresql import UUID
+from sqlalchemy.sql import func
 import uuid
 from datetime import datetime
-from enum import Enum
-from pydantic import EmailStr
+from src.db.base import Base
 
 
-class Role(str, Enum):
-    pass
+class User(Base):
+    __tablename__ = "users"
 
-
-class User(SQLModel, table=True):
-    __tablename__: str = "users"
-
-    id: uuid.UUID = Field(
-        sa_column=Column(
-            pg.UUID, primary_key=True, unique=True, nullable=False, default=uuid.uuid4
-        )
+    id: Mapped[uuid.UUID] = mapped_column(
+        UUID(as_uuid=True), primary_key=True, default=uuid.uuid4
     )
-    email: EmailStr = Field(sa_column=Column(String(128), nullable=False, index=True))
-    first_name: str = Field(nullable=False)
-    last_name: str = Field(nullable=False)
-    password_hash: str = Field(
-        sa_column=Column(String(128), nullable=False), exclude=True
+    email: Mapped[str] = mapped_column(String, unique=True, index=True)
+    full_name: Mapped[str] = mapped_column(String)
+
+    phone_number: Mapped[str | None] = mapped_column(String, nullable=True)
+
+    password_hash: Mapped[str] = mapped_column(String)
+    is_verified: Mapped[bool] = mapped_column(Boolean, default=False)
+
+    created_at: Mapped[datetime] = mapped_column(
+        DateTime(timezone=True), server_default=func.now()
     )
-    is_verified: bool = False
-    created_at: datetime = Field(sa_column=Column(pg.TIMESTAMP, default=datetime.now))
-    updated_at: datetime = Field(sa_column=Column(pg.TIMESTAMP, default=datetime.now))
-
-    def __repr__(self) -> str:
-        return f"{self.email}"
-
-
-# - id
-# - email
-# - full_name
-# - phone_number
-# - password_hash
-# - created_at
-# - is_verified
