@@ -59,3 +59,15 @@ class Campaign(SQLModel, table=True):
 
     def __repr__(self) -> str:
         return f"-> {self.title}  added!"
+
+
+# - id
+# - creator_id (who created it? links to USERS)
+# - title
+# - description
+# - goal_amount (in GHS)
+# - current_amount (total contributed so far)
+# - deadline (when does campaign end?)
+# - status (ACTIVE, SUCCESSFUL, FAILED, EXTENDED?)
+# - created_at
+# - updated_at

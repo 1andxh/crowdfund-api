@@ -31,3 +31,12 @@ class User(SQLModel, table=True):
 
     def __repr__(self) -> str:
         return f"{self.email}"
+
+
+# - id
+# - email
+# - full_name
+# - phone_number
+# - password_hash
+# - created_at
+# - is_verified
