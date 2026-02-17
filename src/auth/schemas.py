@@ -6,8 +6,7 @@ from pydantic import EmailStr, BaseModel, Field
 class UserBaseModel(BaseModel):
     email: EmailStr
     # phone_number: str
-    first_name: str
-    last_name: str
+    full_name: str
 
 
 class UserCreateModel(UserBaseModel):
