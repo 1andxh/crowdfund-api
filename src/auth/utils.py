@@ -1,17 +1,16 @@
-from passlib.context import CryptContext
-import hashlib, bcrypt
-from datetime import datetime
-import jwt
-import uuid
+import hashlib
 import logging
+import uuid
+from datetime import datetime, timedelta, timezone
+
+import bcrypt
+import jwt
+
 from src.config import config
-from datetime import timedelta, timezone
 
 jwt_secret_key = config.JWT_SECRET
 jwt_algorithm = config.JWT_ALGORITHM
 ACCESS_TOKEN_EXPIRY = 3600
-
-now = datetime.now(timezone.utc)
 
 
 def hash_password(password: str) -> str:
@@ -30,23 +29,26 @@ def create_access_token(
     expiry: timedelta = timedelta(seconds=ACCESS_TOKEN_EXPIRY),
     refresh: bool = False,
 ):
-    payload = {}
+    now = datetime.now(timezone.utc)
 
-    payload["user"] = user_data
-    payload["exp"] = now + expiry
-    payload["jti"] = str(uuid.uuid4())
-    payload["refresh"] = refresh
-    payload["iat"] = now
+    payload = {
+        "user": user_data,
+        "exp": now + expiry,
+        "jti": str(uuid.uuid4()),
+        "refresh": refresh,
+        "iat": now,
+    }
 
     token = jwt.encode(payload=payload, key=jwt_secret_key, algorithm=jwt_algorithm)
-
     return token
 
 
 def decode_token(token: str) -> dict | None:
     try:
         token_data = jwt.decode(
-            jwt=token, key=jwt_secret_key, algorithms=[jwt_algorithm]
+            jwt=token,
+            key=jwt_secret_key,
+            algorithms=[jwt_algorithm],
         )
         return token_data
     except jwt.PyJWTError as e:
