@@ -9,11 +9,67 @@ from sqlalchemy.orm import mapped_column, Mapped, relationship
 from sqlalchemy.dialects.postgresql import UUID
 from sqlalchemy.sql import func
 import uuid
+import enum
 from datetime import datetime
 from src.db.base import Base
-from src.auth import User
-from src.campaigns import Campaign
+from typing import TYPE_CHECKING
+
+if TYPE_CHECKING:
+    from src.campaigns.models import Campaign
+    from src.auth.models import User
+
+
+class PaymentStatus(str, enum.Enum):
+    PENDING = "PENDING"
+    COMPLETED = "COMPLETED"
+    FAILED = "FAILED"
+    REFUNDED = "REFUNDED"
 
 
 class Contribution(Base):
     __tablename__ = "contributions"
+
+    id: Mapped[uuid.UUID] = mapped_column(
+        UUID(as_uuid=True), primary_key=True, default=uuid.uuid4
+    )
+    campaign_id: Mapped[uuid.UUID] = mapped_column(
+        ForeignKey("campaigns.id"), nullable=False
+    )
+    user_id: Mapped[uuid.UUID | None] = mapped_column(
+        ForeignKey("users.id"), nullable=True
+    )
+    # guest contributor info
+    contributor_email: Mapped[str] = mapped_column(
+        String(255), index=True, nullable=False
+    )
+    contributor_name: Mapped[str] = mapped_column(String(128), nullable=False)
+    # payment details
+    amount: Mapped[float] = mapped_column(
+        Numeric(10, 2),
+        nullable=False,
+    )
+    payment_status: Mapped[PaymentStatus] = mapped_column(
+        SAEnum(PaymentStatus, name="payment_status_enum", native_enum=False),
+        default=PaymentStatus.PENDING,
+        nullable=False,
+    )
+    paystack_reference: Mapped[str] = mapped_column(
+        String, unique=True, index=True, nullable=True
+    )
+    paystack_access_code: Mapped[str] = mapped_column(String, nullable=True)
+    # timestamps
+    created_at: Mapped[datetime] = mapped_column(
+        DateTime(timezone=True), server_default=func.now()
+    )
+    completed_at: Mapped[datetime | None] = mapped_column(
+        DateTime(timezone=True), nullable=True
+    )
+    refunded_at: Mapped[datetime | None] = mapped_column(
+        DateTime(timezone=True), nullable=True
+    )
+
+    # relationships
+    campaign: Mapped["Campaign"] = relationship(
+        "Campaign", back_populates="contributions"
+    )
+    user: Mapped["User | None"] = relationship("User", back_populates="contributions")
