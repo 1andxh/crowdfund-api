@@ -22,10 +22,10 @@ Session = async_sessionmaker(
 )
 
 
-async def init_db() -> None:
-    """create db connection"""
-    async with async_engine.begin() as conn:
-        await conn.run_sync(Base.metadata.create_all)
+# async def init_db() -> None:
+#     """create db connection"""
+#     async with async_engine.begin() as conn:
+#         await conn.run_sync(Base.metadata.create_all)
 
 
 async def get_session() -> AsyncGenerator[AsyncSession, None]:
