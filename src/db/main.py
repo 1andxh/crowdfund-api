@@ -5,6 +5,8 @@ from sqlalchemy.ext.asyncio import AsyncSession, async_sessionmaker, create_asyn
 from src.auth import models as _auth_models
 from src.campaigns import models as _campaign_models
 from src.config import config
+from src.contributions import models as _contribution_model
+from src.payouts import models as _payout_model
 
 async_engine = create_async_engine(
     url=config.DATABASE_URL,
