@@ -1,6 +1,5 @@
 from fastapi import FastAPI
 from contextlib import asynccontextmanager
-from src.db.main import init_db
 from src.auth.routes import auth_router
 
 version = "v1"
@@ -9,7 +8,6 @@ version = "v1"
 @asynccontextmanager
 async def lifespan(app: FastAPI):
     print("server is starting...")
-    await init_db()
 
     yield
     print("server is stopping")

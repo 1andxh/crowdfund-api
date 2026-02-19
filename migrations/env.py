@@ -9,6 +9,7 @@ from alembic import context
 from src.config import config
 from src.auth.models import User
 from src.db.base import Base
+from src.campaigns.models import Campaign
 
 
 database_url = config.DATABASE_URL

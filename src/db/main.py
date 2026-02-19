@@ -1,16 +1,10 @@
-from sqlalchemy.ext.asyncio import (
-    create_async_engine,
-    async_sessionmaker,
-    AsyncSession,
-)
-from typing import AsyncGenerator, Annotated
-from src.db.base import Base
+from typing import AsyncGenerator
+
+from sqlalchemy.ext.asyncio import AsyncSession, async_sessionmaker, create_async_engine
+
+from src.auth import models as _auth_models
+from src.campaigns import models as _campaign_models
 from src.config import config
-from src.auth.models import User
-
-from sqlalchemy import text
-
-# note: import models before metadata.create_all()
 
 async_engine = create_async_engine(
     url=config.DATABASE_URL,
@@ -22,14 +16,7 @@ Session = async_sessionmaker(
 )
 
 
-# async def init_db() -> None:
-#     """create db connection"""
-#     async with async_engine.begin() as conn:
-#         await conn.run_sync(Base.metadata.create_all)
-
-
 async def get_session() -> AsyncGenerator[AsyncSession, None]:
-
     async with Session() as session:
         try:
             yield session

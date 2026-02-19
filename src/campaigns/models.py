@@ -1,19 +1,17 @@
-from sqlalchemy import (
-    String,
-    DateTime,
-    ForeignKey,
-    Enum as SAEnum,
-    Numeric,
-    Text,
-)
-from sqlalchemy.orm import mapped_column, Mapped, relationship
-from sqlalchemy.dialects.postgresql import UUID
-from sqlalchemy.sql import func
+import enum
 import uuid
 from datetime import datetime
+from typing import TYPE_CHECKING
+
+from sqlalchemy import DateTime, Enum as SAEnum, ForeignKey, Numeric, String, Text
+from sqlalchemy.dialects.postgresql import UUID
+from sqlalchemy.orm import Mapped, mapped_column, relationship
+from sqlalchemy.sql import func
+
 from src.db.base import Base
-import enum
-from ..auth.models import User
+
+if TYPE_CHECKING:
+    from src.auth.models import User
 
 
 class CampaignStatus(str, enum.Enum):
@@ -53,5 +51,4 @@ class Campaign(Base):
         DateTime(timezone=True), nullable=True
     )
 
-    # Relationships
     creator: Mapped["User"] = relationship("User", back_populates="campaigns")

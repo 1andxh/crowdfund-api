@@ -1,11 +1,16 @@
-from sqlalchemy import String, Boolean, DateTime
-from sqlalchemy.orm import mapped_column, Mapped, relationship
-from sqlalchemy.dialects.postgresql import UUID
-from sqlalchemy.sql import func
-import uuid
 from datetime import datetime
+import uuid
+from typing import TYPE_CHECKING
+
+from sqlalchemy import Boolean, DateTime, String
+from sqlalchemy.dialects.postgresql import UUID
+from sqlalchemy.orm import Mapped, mapped_column, relationship
+from sqlalchemy.sql import func
+
 from src.db.base import Base
-from ..campaigns.models import Campaign
+
+if TYPE_CHECKING:
+    from src.campaigns.models import Campaign
 
 
 class User(Base):
@@ -25,7 +30,7 @@ class User(Base):
     created_at: Mapped[datetime] = mapped_column(
         DateTime(timezone=True), server_default=func.now()
     )
-    # relationship
+
     campaigns: Mapped[list["Campaign"]] = relationship(
         "Campaign", back_populates="creator"
     )
