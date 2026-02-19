@@ -6,7 +6,7 @@ from sqlalchemy.ext.asyncio import (
 from typing import AsyncGenerator, Annotated
 from src.db.base import Base
 from src.config import config
-from src.models.user_model import User
+from src.auth.models import User
 
 from sqlalchemy import text
 

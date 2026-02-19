@@ -2,8 +2,8 @@ from pydantic import EmailStr
 from sqlalchemy.ext.asyncio.session import AsyncSession
 from sqlmodel import exists, select
 
-from ..models.user_model import User
-from ..schemas.user_schemas import UserCreateModel
+from .models import User
+from .schemas import UserCreateModel
 from .utils import hash_password
 
 

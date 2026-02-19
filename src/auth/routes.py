@@ -10,7 +10,7 @@ from sqlmodel.ext.asyncio.session import AsyncSession
 from src.db.main import get_session
 
 from .dependencies import RefreshTokenBearer, get_current_user
-from ..schemas.user_schemas import UserCreateModel, UserLoginModel, UserResponseModel
+from .schemas import UserCreateModel, UserLoginModel, UserResponseModel
 from .service import UserService
 from .utils import create_access_token, verify_password
 

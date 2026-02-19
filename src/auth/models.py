@@ -5,7 +5,7 @@ from sqlalchemy.sql import func
 import uuid
 from datetime import datetime
 from src.db.base import Base
-from .campaign_model import Campaign
+from ..campaigns.models import Campaign
 
 
 class User(Base):

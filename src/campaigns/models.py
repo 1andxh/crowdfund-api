@@ -13,7 +13,7 @@ import uuid
 from datetime import datetime
 from src.db.base import Base
 import enum
-from .user_model import User
+from ..auth.models import User
 
 
 class CampaignStatus(str, enum.Enum):
