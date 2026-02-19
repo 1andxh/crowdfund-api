@@ -12,6 +12,8 @@ from src.db.base import Base
 
 if TYPE_CHECKING:
     from src.auth.models import User
+    from src.contributions.models import Contribution
+    from src.payouts.models import Payout
 
 
 class CampaignStatus(str, enum.Enum):
@@ -50,5 +52,11 @@ class Campaign(Base):
     ended_at: Mapped[datetime | None] = mapped_column(
         DateTime(timezone=True), nullable=True
     )
-
+    # relationship
     creator: Mapped["User"] = relationship("User", back_populates="campaigns")
+    contributions: Mapped[list["Contribution"]] = relationship(
+        "Contribution", back_populates="campaign"
+    )
+    payout: Mapped["Payout"] = relationship(
+        "Payout", back_populates="campaign", uselist=False  # One-to-one
+    )

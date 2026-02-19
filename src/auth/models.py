@@ -11,6 +11,7 @@ from src.db.base import Base
 
 if TYPE_CHECKING:
     from src.campaigns.models import Campaign
+    from src.contributions.models import Contribution
 
 
 class User(Base):
@@ -30,7 +31,10 @@ class User(Base):
     created_at: Mapped[datetime] = mapped_column(
         DateTime(timezone=True), server_default=func.now()
     )
-
+    # relationship
     campaigns: Mapped[list["Campaign"]] = relationship(
         "Campaign", back_populates="creator"
+    )
+    contributions: Mapped[list["Contribution"]] = relationship(
+        "Contribution", back_populates="user"
     )
