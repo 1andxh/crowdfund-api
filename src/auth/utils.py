@@ -45,12 +45,12 @@ def create_access_token(
 
 def decode_token(token: str) -> dict | None:
     try:
-        token_data = jwt.decode(
+        payload = jwt.decode(
             jwt=token,
             key=jwt_secret_key,
             algorithms=[jwt_algorithm],
         )
-        return token_data
+        return payload
     except jwt.PyJWTError as e:
         logging.exception(e)
         return None
