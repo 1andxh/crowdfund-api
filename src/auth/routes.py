@@ -70,7 +70,6 @@ async def login(login_data: UserLoginModel, session: Session):
         )
         return JSONResponse(
             content={
-                "message": "login successful",
                 "access_token": access_token,
                 "refresh_token": refresh_token,
             }
