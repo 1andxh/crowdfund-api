@@ -19,6 +19,7 @@ class PaystackClient:
         self, email: str, amount: float, reference: str, callback_url: str | None = None
     ) -> dict[str, Any]:
         """initialize a transaction"""
+        url = f"{self.base_url}/transaction/initialize"
 
         amount_in_pesewas = int(amount * 100)
 
@@ -32,7 +33,7 @@ class PaystackClient:
             payload["callback_url"] = callback_url
 
         async with httpx.AsyncClient() as client:
-            response = await client.post(url, json=payload, headers=self.headers)
+            response = await client.post(url=url, json=payload, headers=self.headers)
             response.raise_for_status()
 
             data = response.json()
@@ -41,3 +42,38 @@ class PaystackClient:
                 return data["data"]
             else:
                 raise Exception(f"Paystack error: {data.get("message")}")
+
+    async def verify_transaction(self, reference: str) -> dict[str, Any]:
+        "verify transaction from reference"
+
+        url = f"{self.base_url}/transaction/verify/{reference}"
+
+        async with httpx.AsyncClient() as client:
+            response = await client.get(url=url, headers=self.headers)
+            response.raise_for_status()
+
+            data = response.json()
+
+            if data.get("status"):
+                return data["data"]
+            else:
+                raise Exception(f"Paystack error: {data.get('message')}")
+
+    async def refund_transaction(self, reference: str) -> dict[str, Any]:
+        url = f"{self.base_url}/refund"
+
+        payload = {"transaction": reference}
+
+        async with httpx.AsyncClient() as client:
+            response = await client.post(url=url, json=payload, headers=self.headers)
+            response.raise_for_status()
+
+            data = response.json()
+
+            if data.get("status"):
+                return data["data"]
+            else:
+                raise Exception(f"Paystack error: {data.get('message')}")
+
+
+paystack_client = PaystackClient()
